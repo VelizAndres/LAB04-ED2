@@ -5,5 +5,5 @@
 
 ## Objetivos:
 
-- Aplicar los conceptos de la codificación de LZW
+- Aplicar los conceptos de la compresión de LZW
 - Aplicar los conceptos de razones de compresión
