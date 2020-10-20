@@ -5,4 +5,10 @@
     <RootNamespace>ClassLibrary_LAB_04_ED2</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Reference Include="ClassLibrary-LAB-03-ED2-URL">
+      <HintPath>..\Dependencias\ClassLibrary-LAB-03-ED2-URL.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>
