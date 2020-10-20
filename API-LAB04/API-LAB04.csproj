@@ -5,5 +5,20 @@
     <RootNamespace>API_LAB04</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Compile Remove="Compressed\**" />
+    <Compile Remove="Decompressed\**" />
+    <Compile Remove="Temp\**" />
+    <Content Remove="Compressed\**" />
+    <Content Remove="Decompressed\**" />
+    <Content Remove="Temp\**" />
+    <EmbeddedResource Remove="Compressed\**" />
+    <EmbeddedResource Remove="Decompressed\**" />
+    <EmbeddedResource Remove="Temp\**" />
+    <None Remove="Compressed\**" />
+    <None Remove="Decompressed\**" />
+    <None Remove="Temp\**" />
+  </ItemGroup>
+
 
 </Project>
