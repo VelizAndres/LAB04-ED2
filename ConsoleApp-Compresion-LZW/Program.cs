@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using ClassLibrary_LAB_04_ED2;
 
 namespace ConsoleApp_Compresion_LZW
 {
@@ -33,6 +34,7 @@ namespace ConsoleApp_Compresion_LZW
         }
         static void Main(string[] args)
         {
+            LZW CompresorCrack = new LZW();
             //Huffman CompresorCrack = new Huffman();
             Header();
             TitleOption1();
@@ -44,51 +46,75 @@ namespace ConsoleApp_Compresion_LZW
                     Header();
                     TitleOption1();
                     Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Ingrese el texto a comprimir:\n\n");
-                    Console.ResetColor();
-                    string Text = Console.ReadLine();
-                    if (String.IsNullOrEmpty(Text))
+
+                    using FileStream file = new FileStream("C:\\Users\\Usuario\\OneDrive\\Escritorio\\cuento.txt", FileMode.OpenOrCreate);
+                    using BinaryReader Lector = new BinaryReader(file);
+                    int Cant_Byte_Read = 10000;
+                    int Aumentar_Max = 1;
+                    byte[] Text = new byte[Cant_Byte_Read];
+                    Text = Lector.ReadBytes(Cant_Byte_Read);
+                    while (file.Position < file.Length)
                     {
-                        throw new FormatException();
+                        byte[] Aux = Lector.ReadBytes(Cant_Byte_Read);
+                        Array.Resize(ref Text, Text.Length + Aux.Length);
+                        Aux.CopyTo(Text, Cant_Byte_Read * Aumentar_Max);
+                        Aumentar_Max++;
                     }
-                    byte[] texto = new byte[Text.Length];
-                    for (int i = 0; i < Text.Length; i++)
-                    {
-                        texto[i] = Convert.ToByte(Convert.ToChar(Text[i]));
-                    }
+                    Lector.Close();
+                    byte[] Impresor = CompresorCrack.Compresion(Text);
+
+                    using FileStream StreFight = new FileStream("C:\\Users\\Usuario\\OneDrive\\Escritorio\\cuentoCOMPRIMIDO.txt", FileMode.OpenOrCreate);
+                    using BinaryWriter Escritor = new BinaryWriter(StreFight);
+                    Escritor.Write(Impresor);
+                    Escritor.Close();
+
+
+
+                    //Console.WriteLine("Ingrese el texto a comprimir:\n\n");
+                    //Console.ResetColor();
+                    //string Text = Console.ReadLine();
+                    //if (String.IsNullOrEmpty(Text))
+                    //{
+                    //    throw new FormatException();
+                    //}
+                    //byte[] texto = new byte[Text.Length];
+                    //for (int i = 0; i < Text.Length; i++)
+                    //{
+                    //    texto[i] = Convert.ToByte(Convert.ToChar(Text[i]));
+                    //}
                     //byte[] Comprimido = CompresorCrack.Compresion(texto);
-                    string result = "";
+                    //string result = "";
                     //foreach (byte bit in Comprimido)
                     //{
                     //    result += Convert.ToString(Convert.ToChar(bit));
                     //}
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("\n\nEl texto comprimido es el siguiente:\n\n");
-                    Console.ResetColor();
-                    Console.WriteLine(result);
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("\n\nPresione cualquier tecla para ver el mismo texto descompreso.");
-                    Console.ResetColor();
-                    Console.ReadKey();
-                    Console.Clear();
-                    Header();
-                    TitleOption2();
-                    result = "";
+                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    //Console.WriteLine("\n\nEl texto comprimido es el siguiente:\n\n");
+                    //Console.ResetColor();
+                    //Console.WriteLine(result);
+                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    //Console.WriteLine("\n\nPresione cualquier tecla para ver el mismo texto descompreso.");
+                    //Console.ResetColor();
+                    //Console.ReadKey();
+                    //Console.Clear();
+                    //Header();
+                    //TitleOption2();
+                    //result = "";
                     //byte[] Descomprimido = CompresorCrack.Descompresion(Comprimido);
                     //foreach (byte bit in Descomprimido)
                     //{
                     //    result += Convert.ToString(Convert.ToChar(bit));
                     //}
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("\n\nEl texto descomprimido es el siguiente:");
-                    Console.ResetColor();
-                    Console.WriteLine("\n" + result + "\n\n");
-                    Console.ForegroundColor = ConsoleColor.Yellow;
-                    Console.WriteLine("Proceso finalizado. Presione una tecla.");
-                    Console.ResetColor();
-                    Console.ReadKey();
-                    Header();
-                    Console.ForegroundColor = ConsoleColor.Magenta;
+                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    //Console.WriteLine("\n\nEl texto descomprimido es el siguiente:");
+                    //Console.ResetColor();
+                    //Console.WriteLine("\n" + result + "\n\n");
+                    //Console.ForegroundColor = ConsoleColor.Yellow;
+                    //Console.WriteLine("Proceso finalizado. Presione una tecla.");
+                    //Console.ResetColor();
+                    //Console.ReadKey();
+                    //Header();
+                    //Console.ForegroundColor = ConsoleColor.Magenta;
                     string e = "Ingrese S para volver a comprimir o cualquier cosa para salir del programa.";
                     Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (e.Length / 2)) + "}", e) + "\n");
                     Console.ResetColor();

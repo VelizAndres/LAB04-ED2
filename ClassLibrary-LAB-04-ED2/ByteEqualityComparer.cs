@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -28,7 +29,7 @@ namespace ClassLibrary_LAB_04_ED2
 
         public int GetHashCode([DisallowNull] byte[] obj)
         {
-            throw new NotImplementedException();
+            return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
         }
     }
 }
