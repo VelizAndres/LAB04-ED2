@@ -28,7 +28,7 @@ namespace ClassLibrary_LAB_04_ED2
         }
 
         public int GetHashCode([DisallowNull] byte[] obj)
-        {
+         {
             return StructuralComparisons.StructuralEqualityComparer.GetHashCode(obj);
         }
     }

@@ -9,6 +9,12 @@ namespace ClassLibrary_LAB_04_ED2
     public class LZW : ICompressor
     {
         Dictionary<byte[], Registro> Tabla;
+
+        public int TamTabla()
+        {
+            return Tabla.Count;
+        }
+
         public byte[] Compresion(byte[] Text_Original)
         {
             ByteEqualityComparer RegComparer = new ByteEqualityComparer();
@@ -56,27 +62,35 @@ namespace ClassLibrary_LAB_04_ED2
             int[] Result = new int[0];
             int Mayor = 0;
             int Cant_Char = 0;
+            bool Pass_Max = false;
             for (int i = 0; i < Texto.Length; i++)
             {
                 Cant_Char = 0;
                 Registro Nuevo = new Registro() { Cadena = new byte[1] };
                 Nuevo.Cadena[Cant_Char] = Texto[i];
                 byte[] aux = new byte[0];
-                while (Tabla.ContainsKey(Nuevo.Cadena) && (Cant_Char + i) < Texto.Length)
+                while (Tabla.ContainsKey(Nuevo.Cadena) && !Pass_Max)
                 {
                     Array.Resize(ref aux, aux.Length + 1);
                     aux[Cant_Char] = Texto[(Cant_Char+i)];
                     Array.Resize(ref Nuevo.Cadena, Nuevo.Cadena.Length + 1);
                     Cant_Char++;
-                    Nuevo.Cadena[Cant_Char] = Texto[(Cant_Char+i)];
+                     if((Cant_Char + i) < Texto.Length)
+                    {
+                        Nuevo.Cadena[Cant_Char] = Texto[(Cant_Char + i)];
+                    }
+                    else
+                    {
+                        Pass_Max = true;
+                    }
                 }
-                Nuevo.Id = Tabla.Count + 1;
-                Tabla.Add(Nuevo.Cadena, Nuevo);
-                Array.Resize(ref Result, (Result.Length + 1));
-                if(Tabla.Count==122)
+                if(!Pass_Max)
                 {
-                    string paro = "simon"; 
+                    i += aux.Length - 1;
+                    Nuevo.Id = Tabla.Count + 1;
+                    Tabla.Add(Nuevo.Cadena, Nuevo);
                 }
+                Array.Resize(ref Result, (Result.Length + 1));
                 Result[Result.Length - 1] = Tabla[aux].Id;
                 if (Result[Result.Length - 1] > Mayor)
                 {
@@ -97,7 +111,7 @@ namespace ClassLibrary_LAB_04_ED2
         private byte[] Send_Text_Compress(int Cant_Bits_Necesarios, int[] Contenedor)
         {
             string binarios = "";
-            byte[] Resultado = new byte[(Contenedor.Length * Cant_Bits_Necesarios) / 8];
+            byte[] Resultado = new byte[Convert.ToInt32(Math.Ceiling((Convert.ToDouble(Contenedor.Length) * Cant_Bits_Necesarios) / 8))];
             int posicion = 0;
             foreach (int Num in Contenedor)
             {
@@ -107,7 +121,7 @@ namespace ClassLibrary_LAB_04_ED2
                     Num_binario = "0" + Num_binario;
                 }
                 binarios += Num_binario;
-                if (binarios.Length == 8)
+                if (binarios.Length >= 8)
                 {
                     string aux = binarios.Substring(0, 8);
                     Resultado[posicion] = Convert.ToByte(Convert.ToInt32(aux, 2));

@@ -128,6 +128,7 @@ namespace ConsoleApp_Compresion_LZW
                     Header();
                     string e = "Ocurrió un error. Presione una tecla para volver a comprimir.";
                     Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (e.Length / 2)) + "}", e) + "\n");
+                    CompresorCrack.TamTabla();
                     Console.ReadKey();
                 }
             }
