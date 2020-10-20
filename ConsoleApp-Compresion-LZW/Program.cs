@@ -47,7 +47,7 @@ namespace ConsoleApp_Compresion_LZW
                     TitleOption1();
                     Console.ForegroundColor = ConsoleColor.Yellow;
 
-                    using FileStream file = new FileStream("C:\\Users\\Usuario\\OneDrive\\Escritorio\\cuento.txt", FileMode.OpenOrCreate);
+                    using FileStream file = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\cuento.txt", FileMode.OpenOrCreate);
                     using BinaryReader Lector = new BinaryReader(file);
                     int Cant_Byte_Read = 10000;
                     int Aumentar_Max = 1;
@@ -63,7 +63,7 @@ namespace ConsoleApp_Compresion_LZW
                     Lector.Close();
                     byte[] Impresor = CompresorCrack.Compresion(Text);
 
-                    using FileStream StreFight = new FileStream("C:\\Users\\Usuario\\OneDrive\\Escritorio\\cuentoCOMPRIMIDO.txt", FileMode.OpenOrCreate);
+                    using FileStream StreFight = new FileStream("C:\\Users\\Diego Veliz\\DesktopC:\\Users\\Diego Veliz\\Desktopo\\cuentoCOMPRIMIDO.txt", FileMode.OpenOrCreate);
                     using BinaryWriter Escritor = new BinaryWriter(StreFight);
                     Escritor.Write(Impresor);
                     Escritor.Close();

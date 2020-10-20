@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 using ClassLibrary_LAB_03_ED2_URL;
 
@@ -61,16 +62,21 @@ namespace ClassLibrary_LAB_04_ED2
                 Registro Nuevo = new Registro() { Cadena = new byte[1] };
                 Nuevo.Cadena[Cant_Char] = Texto[i];
                 byte[] aux = new byte[0];
-                while (!Tabla.ContainsKey(Nuevo.Cadena))
+                while (Tabla.ContainsKey(Nuevo.Cadena) && (Cant_Char + i) < Texto.Length)
                 {
                     Array.Resize(ref aux, aux.Length + 1);
-                    aux[Cant_Char] = Texto[i];
+                    aux[Cant_Char] = Texto[(Cant_Char+i)];
                     Array.Resize(ref Nuevo.Cadena, Nuevo.Cadena.Length + 1);
-                    Nuevo.Cadena[Cant_Char++] = Texto[i++];
+                    Cant_Char++;
+                    Nuevo.Cadena[Cant_Char] = Texto[(Cant_Char+i)];
                 }
                 Nuevo.Id = Tabla.Count + 1;
                 Tabla.Add(Nuevo.Cadena, Nuevo);
                 Array.Resize(ref Result, (Result.Length + 1));
+                if(Tabla.Count==122)
+                {
+                    string paro = "simon"; 
+                }
                 Result[Result.Length - 1] = Tabla[aux].Id;
                 if (Result[Result.Length - 1] > Mayor)
                 {
