@@ -183,24 +183,33 @@ namespace ClassLibrary_LAB_04_ED2
                     string Bits = aux_binario.Substring(0, Cant_Bits);
                     aux_binario = aux_binario.Remove(0, Cant_Bits);
                     aux = Convert.ToInt32(Bits, 2);
-                    int Tam = Tabla_Descompres[aux].Cadena.Length;
-                    Array.Resize(ref Result, (Result.Length + Tam));
-                    Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length -Tam, Tam);
-                 
-                    if (!(anterior == 0))
+                    if ((Tabla_Descompres.ContainsKey(aux)))
+                    {
+                        int Tam = Tabla_Descompres[aux].Cadena.Length;
+                        Array.Resize(ref Result, (Result.Length + Tam));
+                        Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
+
+                        if (!(anterior == 0))
+                        {
+                            Registro Nuevo = new Registro();
+                            Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
+                            Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
+                            Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[aux].Cadena[0];
+                            Nuevo.Id = Tabla_Descompres.Count + 1;
+                            Tabla_Descompres.Add(Nuevo.Id, Nuevo);
+                        }
+                    }
+                    else
                     {
                         Registro Nuevo = new Registro();
                         Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
                         Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
-                        Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[aux].Cadena[0];
+                        Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[anterior].Cadena[0];
                         Nuevo.Id = Tabla_Descompres.Count + 1;
                         Tabla_Descompres.Add(Nuevo.Id, Nuevo);
-                    }
-                    if(Tabla_Descompres.Count==126)
-                    {
-
-                        bool stop = true;
-                        return Result;
+                        int Tam = Tabla_Descompres[aux].Cadena.Length;
+                        Array.Resize(ref Result, (Result.Length + Tam));
+                        Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
                     }
                     anterior = aux;
                 }
