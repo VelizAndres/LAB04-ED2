@@ -9,16 +9,19 @@ namespace ClassLibrary_LAB_04_ED2
     public class LZW : ICompressor
     {
         Dictionary<byte[], Registro> Tabla;
+        Dictionary<int,Registro> Tabla_Descompres;
+        int Tam_Original;
+        int Tam_Comprimido;
 
-        public int TamTabla()
+
+        public int TamTabl()
         {
-            return Tabla.Count;
+            return Tabla_Descompres.Count;
         }
 
         public byte[] Compresion(byte[] Text_Original)
         {
             ByteEqualityComparer RegComparer = new ByteEqualityComparer();
-            //   Dictionary<byte[], Registro> StartDiccionario = new Dictionary<byte[], Registro>();
             Tabla = new Dictionary<byte[], Registro>(RegComparer);
             byte[] Meta_Data = Crear_Tabla(Text_Original);
             int Tam_Data = Meta_Data.Length;
@@ -84,9 +87,9 @@ namespace ClassLibrary_LAB_04_ED2
                         Pass_Max = true;
                     }
                 }
-                if(!Pass_Max)
+                i += aux.Length - 1;
+                if (!Pass_Max)
                 {
-                    i += aux.Length - 1;
                     Nuevo.Id = Tabla.Count + 1;
                     Tabla.Add(Nuevo.Cadena, Nuevo);
                 }
@@ -105,7 +108,7 @@ namespace ClassLibrary_LAB_04_ED2
             {
                 Resultado_Compress[i] = Txt_Compres[i - 1];
             }
-            return Txt_Compres;
+            return Resultado_Compress;
         }
 
         private byte[] Send_Text_Compress(int Cant_Bits_Necesarios, int[] Contenedor)
@@ -121,7 +124,7 @@ namespace ClassLibrary_LAB_04_ED2
                     Num_binario = "0" + Num_binario;
                 }
                 binarios += Num_binario;
-                if (binarios.Length >= 8)
+                while(binarios.Length >= 8)
                 {
                     string aux = binarios.Substring(0, 8);
                     Resultado[posicion] = Convert.ToByte(Convert.ToInt32(aux, 2));
@@ -139,6 +142,7 @@ namespace ClassLibrary_LAB_04_ED2
                 Resultado[posicion] = Convert.ToByte(Convert.ToInt32(aux, 2));
                 binarios = binarios.Remove(0, 8);
             }
+            Tam_Comprimido = Resultado.Length;
             return Resultado;
         }
 
@@ -146,12 +150,63 @@ namespace ClassLibrary_LAB_04_ED2
 
         public byte[] Descompresion(byte[] LZWCompressedText)
         {
-            throw new NotImplementedException();
+            Tabla_Descompres = new Dictionary<int, Registro>();
+            byte Cant_Tabla = LZWCompressedText[0];
+            Get_Tabla(LZWCompressedText, Cant_Tabla);
+            byte[] Result = Get_Text_Descompress(LZWCompressedText, Cant_Tabla + 1); 
+            return Result;
         }
 
+        private void Get_Tabla(byte[] Text_Compress, int Final_PosTable)
+        {
+            for (int i = 1; i <= Final_PosTable; i++)
+            {
+                Registro Nuevo = new Registro() { Cadena = new byte[1] };
+                Nuevo.Cadena[0] = Text_Compress[i];
+                Nuevo.Id = i;
+                Tabla_Descompres.Add(Nuevo.Id, Nuevo);
+            }
+        }
 
+        private byte[]  Get_Text_Descompress(byte[] Text_Compress, int Position_Start)
+        {
+            int Cant_Bits = Text_Compress[Position_Start];
+            int aux = 0;
+            int anterior = 0;
+            string aux_binario = "";
+            byte[] Result = new byte[0];
+            for(int i=Position_Start+1;i<Text_Compress.Length;i++)
+            {
+                aux_binario += Convert.ToString(Convert.ToInt32(Text_Compress[i]), 2).PadLeft(8,Convert.ToChar("0"));
+                while(aux_binario.Length >= Cant_Bits )
+                {
+                    string Bits = aux_binario.Substring(0, Cant_Bits);
+                    aux_binario = aux_binario.Remove(0, Cant_Bits);
+                    aux = Convert.ToInt32(Bits, 2);
+                    int Tam = Tabla_Descompres[aux].Cadena.Length;
+                    Array.Resize(ref Result, (Result.Length + Tam));
+                    Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length -Tam, Tam);
+                 
+                    if (!(anterior == 0))
+                    {
+                        Registro Nuevo = new Registro();
+                        Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
+                        Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
+                        Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[aux].Cadena[0];
+                        Nuevo.Id = Tabla_Descompres.Count + 1;
+                        Tabla_Descompres.Add(Nuevo.Id, Nuevo);
+                    }
+                    if(Tabla_Descompres.Count==126)
+                    {
 
-
+                        bool stop = true;
+                        return Result;
+                    }
+                    anterior = aux;
+                }
+            }
+            return Result;
+        }
         /// <summary>
         /// Metodo que devuelve los valores de compresión
         /// </summary>

@@ -35,7 +35,6 @@ namespace ConsoleApp_Compresion_LZW
         static void Main(string[] args)
         {
             LZW CompresorCrack = new LZW();
-            //Huffman CompresorCrack = new Huffman();
             Header();
             TitleOption1();
             bool exit = false;
@@ -47,7 +46,28 @@ namespace ConsoleApp_Compresion_LZW
                     TitleOption1();
                     Console.ForegroundColor = ConsoleColor.Yellow;
 
-                    using FileStream file = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\cuento.txt", FileMode.OpenOrCreate);
+                    //using FileStream file = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\cuento.txt", FileMode.OpenOrCreate);
+                    //using BinaryReader Lector = new BinaryReader(file);
+                    //int Cant_Byte_Read = 10000;
+                    //int Aumentar_Max = 1;
+                    //byte[] Text = new byte[Cant_Byte_Read];
+                    //Text = Lector.ReadBytes(Cant_Byte_Read);
+                    //while (file.Position < file.Length)
+                    //{
+                    //    byte[] Aux = Lector.ReadBytes(Cant_Byte_Read);
+                    //    Array.Resize(ref Text, Text.Length + Aux.Length);
+                    //    Aux.CopyTo(Text, Cant_Byte_Read * Aumentar_Max);
+                    //    Aumentar_Max++;
+                    //}
+                    //Lector.Close();
+                    //byte[] Impresor = CompresorCrack.Compresion(Text);
+
+                    //using FileStream StreFight = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\cuentoComprimido.txt", FileMode.OpenOrCreate);
+                    //using BinaryWriter Escritor = new BinaryWriter(StreFight);
+                    //Escritor.Write(Impresor);
+                    //Escritor.Close();
+
+                    using FileStream file = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\cuentoComprimido.txt", FileMode.OpenOrCreate);
                     using BinaryReader Lector = new BinaryReader(file);
                     int Cant_Byte_Read = 10000;
                     int Aumentar_Max = 1;
@@ -61,14 +81,12 @@ namespace ConsoleApp_Compresion_LZW
                         Aumentar_Max++;
                     }
                     Lector.Close();
-                    byte[] Impresor = CompresorCrack.Compresion(Text);
+                    byte[] Impresor = CompresorCrack.Descompresion(Text);
 
-                    using FileStream StreFight = new FileStream("C:\\Users\\Diego Veliz\\DesktopC:\\Users\\Diego Veliz\\Desktopo\\cuentoCOMPRIMIDO.txt", FileMode.OpenOrCreate);
+                    using FileStream StreFight = new FileStream("C:\\Users\\Diego Veliz\\Desktop\\Resultado.txt", FileMode.OpenOrCreate);
                     using BinaryWriter Escritor = new BinaryWriter(StreFight);
                     Escritor.Write(Impresor);
                     Escritor.Close();
-
-
 
                     //Console.WriteLine("Ingrese el texto a comprimir:\n\n");
                     //Console.ResetColor();
@@ -128,7 +146,7 @@ namespace ConsoleApp_Compresion_LZW
                     Header();
                     string e = "Ocurrió un error. Presione una tecla para volver a comprimir.";
                     Console.WriteLine(String.Format("{0," + ((Console.WindowWidth / 2) + (e.Length / 2)) + "}", e) + "\n");
-                    CompresorCrack.TamTabla();
+                    int Tam = CompresorCrack.TamTabl();
                     Console.ReadKey();
                 }
             }
