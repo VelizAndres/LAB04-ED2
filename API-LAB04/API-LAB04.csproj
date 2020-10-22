@@ -20,5 +20,9 @@
     <None Remove="Temp\**" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ClassLibrary-LAB-04-ED2\ClassLibrary-LAB-04-ED2.csproj" />
+  </ItemGroup>
+
 
 </Project>

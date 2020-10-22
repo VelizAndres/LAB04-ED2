@@ -13,12 +13,13 @@ namespace ClassLibrary_LAB_04_ED2
         int Tam_Original;
         int Tam_Comprimido;
 
+ // 
 
-        public int TamTabl()
-        {
-            return Tabla_Descompres.Count;
-        }
-
+        /// <summary>
+        /// Implementación del Metodo de compresion de la Interfaz ICompressor
+        /// </summary>
+        /// <param name="Text_Original">Texto a comprimir</param>
+        /// <returns>Entrada comprimida</returns>
         public byte[] Compresion(byte[] Text_Original)
         {
             ByteEqualityComparer RegComparer = new ByteEqualityComparer();
@@ -32,9 +33,10 @@ namespace ClassLibrary_LAB_04_ED2
         }
 
         /// <summary>
-        /// Metodo para obtener todos los caracteres distintos e ingrearlos al diccionario
+        /// Metodo para obtener todos los caracteres distintos e ingrearlos al diccionario Tabla
         /// </summary>
-        /// <param name="Texto">Texto a Comprimir</param>
+        /// <param name="Texto">Texto de entrada a comprimir</param>
+        /// <returns>Metada de la Tabla de valores iniciales</returns>
         private byte[] Crear_Tabla(byte[] Texto)
         {
             foreach (byte Caracter in Texto)
@@ -51,7 +53,8 @@ namespace ClassLibrary_LAB_04_ED2
             byte[] Data = new byte[1 + Tabla.Count];
             var Datos = Tabla.Values;
             int posicion = 0;
-            Data[posicion] = Convert.ToByte(Tabla.Count);
+            //Add %256 
+            Data[posicion] = Convert.ToByte(Tabla.Count%256);
             foreach (Registro Item in Datos)
             {
                 posicion++;
@@ -60,6 +63,11 @@ namespace ClassLibrary_LAB_04_ED2
             return Data;
         }
 
+        /// <summary>
+        /// Metodo que realiza el proceso de obtención de ID del texto entrada
+        /// </summary>
+        /// <param name="Texto">Texto de entrada a comprimir</param>
+        /// <returns>Texto Comprimido</returns>
         private byte[] Create_Compression(byte[] Texto)
         {
             int[] Result = new int[0];
@@ -111,6 +119,12 @@ namespace ClassLibrary_LAB_04_ED2
             return Resultado_Compress;
         }
 
+        /// <summary>
+        /// Metodo que convierte el arreglo de ID a Texto Comprimido
+        /// </summary>
+        /// <param name="Cant_Bits_Necesarios">Cantidad de bits necesarios para la escritura del ID mayor</param>
+        /// <param name="Contenedor">Arreglo de int que contine los ID</param>
+        /// <returns>Texto Comprimido</returns>
         private byte[] Send_Text_Compress(int Cant_Bits_Necesarios, int[] Contenedor)
         {
             string binarios = "";
@@ -148,15 +162,30 @@ namespace ClassLibrary_LAB_04_ED2
 
 
 
-        public byte[] Descompresion(byte[] LZWCompressedText)
+        /// <summary>
+        ///  Implementación del Metodo de Descompresión de la Interfaz ICompressor
+        /// </summary>
+        /// <param name="CompressedText">Texto Comprimido</param>
+        /// <returns>Entrada de texto Descomprimida</returns>
+        public byte[] Descompresion(byte[] CompressedText)
         {
             Tabla_Descompres = new Dictionary<int, Registro>();
-            byte Cant_Tabla = LZWCompressedText[0];
-            Get_Tabla(LZWCompressedText, Cant_Tabla);
-            byte[] Result = Get_Text_Descompress(LZWCompressedText, Cant_Tabla + 1); 
+            byte Cant_Tabla = CompressedText[0];
+            int posicion = Convert.ToInt32(Cant_Tabla);
+            if(posicion==0)
+            {
+                posicion = 256;
+            }
+            Get_Tabla(CompressedText, posicion);
+            byte[] Result = Get_Text_Descompress(CompressedText, posicion + 1); 
             return Result;
         }
 
+        /// <summary>
+        /// Metodo para ingresar a la Tabla_Descompress los valores iniciales
+        /// </summary>
+        /// <param name="Text_Compress">Entrada de texto comprimida</param>
+        /// <param name="Final_PosTable">Posición hasta la que se leerán los datos de la Metadata</param>
         private void Get_Tabla(byte[] Text_Compress, int Final_PosTable)
         {
             for (int i = 1; i <= Final_PosTable; i++)
@@ -168,6 +197,12 @@ namespace ClassLibrary_LAB_04_ED2
             }
         }
 
+        /// <summary>
+        /// Metodo para realizar la descompresión de la entrada de Texto
+        /// </summary>
+        /// <param name="Text_Compress">Entrada de texto comprimida</param>
+        /// <param name="Position_Start">Posición a partir de la cual se leerá el texto comprimido</param>
+        /// <returns>Entrada de texto descomprimida</returns>
         private byte[]  Get_Text_Descompress(byte[] Text_Compress, int Position_Start)
         {
             int Cant_Bits = Text_Compress[Position_Start];
@@ -216,16 +251,19 @@ namespace ClassLibrary_LAB_04_ED2
             }
             return Result;
         }
+
+
+
         /// <summary>
-        /// Metodo que devuelve los valores de compresión
+        /// Metodo para obtener los valores de compresión
         /// </summary>
         /// <returns>[0] Razón compresión, [1] Factor Compresión, [2] Porcentaje Reduccion</returns>
-        //public double[] Datos_Compresion()
-        //{
-        //    double razon_compresion = Convert.ToDouble(Tam_Compress) / Convert.ToDouble(Tam_Original);
-        //    double Factor_Compresion = Convert.ToDouble(Tam_Original) / Convert.ToDouble(Tam_Compress);
-        //    double Porcentaje_Reduccion = 100 * (Convert.ToDouble((Tam_Original - Tam_Compress)) / Convert.ToDouble(Tam_Original));
-        //    return new double[3] { razon_compresion, Factor_Compresion, Porcentaje_Reduccion };
-        //}
+        public double[] Datos_Compresion()
+        {
+            double razon_compresion = Convert.ToDouble(Tam_Comprimido) / Convert.ToDouble(Tam_Original);
+            double Factor_Compresion = Convert.ToDouble(Tam_Original) / Convert.ToDouble(Tam_Comprimido);
+            double Porcentaje_Reduccion = 100 * (Convert.ToDouble((Tam_Original - Tam_Comprimido)) / Convert.ToDouble(Tam_Original));
+            return new double[3] { razon_compresion, Factor_Compresion, Porcentaje_Reduccion };
+        }
     }
 }
