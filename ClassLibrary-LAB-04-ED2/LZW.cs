@@ -22,6 +22,7 @@ namespace ClassLibrary_LAB_04_ED2
         /// <returns>Entrada comprimida</returns>
         public byte[] Compresion(byte[] Text_Original)
         {
+            Tam_Original = Text_Original.Length;
             ByteEqualityComparer RegComparer = new ByteEqualityComparer();
             Tabla = new Dictionary<byte[], Registro>(RegComparer);
             byte[] Meta_Data = Crear_Tabla(Text_Original);
