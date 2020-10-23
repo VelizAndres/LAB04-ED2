@@ -13,7 +13,7 @@ namespace ClassLibrary_LAB_04_ED2
         int Tam_Original;
         int Tam_Comprimido;
 
- // 
+  
 
         /// <summary>
         /// Implementación del Metodo de compresion de la Interfaz ICompressor
@@ -207,44 +207,49 @@ namespace ClassLibrary_LAB_04_ED2
         {
             int Cant_Bits = Text_Compress[Position_Start];
             int aux = 0;
-            int anterior = 0;
+            int anterior = -1;
             string aux_binario = "";
             byte[] Result = new byte[0];
             for(int i=Position_Start+1;i<Text_Compress.Length;i++)
             {
                 aux_binario += Convert.ToString(Convert.ToInt32(Text_Compress[i]), 2).PadLeft(8,Convert.ToChar("0"));
-                while(aux_binario.Length >= Cant_Bits )
+                while(aux_binario.Length >= Cant_Bits && anterior!=0)
                 {
+                    
                     string Bits = aux_binario.Substring(0, Cant_Bits);
                     aux_binario = aux_binario.Remove(0, Cant_Bits);
                     aux = Convert.ToInt32(Bits, 2);
-                    if ((Tabla_Descompres.ContainsKey(aux)))
+                    if (aux != 0)
                     {
-                        int Tam = Tabla_Descompres[aux].Cadena.Length;
-                        Array.Resize(ref Result, (Result.Length + Tam));
-                        Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
+                        if (Tabla_Descompres.ContainsKey(aux))
+                        {
+                            int Tam = Tabla_Descompres[aux].Cadena.Length;
+                            Array.Resize(ref Result, (Result.Length + Tam));
+                            Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
 
-                        if (!(anterior == 0))
+                            if (!(anterior == -1))
+                            {
+                                Registro Nuevo = new Registro();
+                                Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
+                                Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
+                                Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[aux].Cadena[0];
+                                Nuevo.Id = Tabla_Descompres.Count + 1;
+                                Tabla_Descompres.Add(Nuevo.Id, Nuevo);
+                            }
+                        }
+                        else
                         {
                             Registro Nuevo = new Registro();
                             Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
                             Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
-                            Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[aux].Cadena[0];
+                            Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[anterior].Cadena[0];
                             Nuevo.Id = Tabla_Descompres.Count + 1;
                             Tabla_Descompres.Add(Nuevo.Id, Nuevo);
+                            int Tam = Tabla_Descompres[aux].Cadena.Length;
+                            Array.Resize(ref Result, (Result.Length + Tam));
+                            Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
                         }
-                    }
-                    else
-                    {
-                        Registro Nuevo = new Registro();
-                        Nuevo.Cadena = Tabla_Descompres[anterior].Cadena;
-                        Array.Resize(ref Nuevo.Cadena, (Nuevo.Cadena.Length + 1));
-                        Nuevo.Cadena[Nuevo.Cadena.Length - 1] = Tabla_Descompres[anterior].Cadena[0];
-                        Nuevo.Id = Tabla_Descompres.Count + 1;
-                        Tabla_Descompres.Add(Nuevo.Id, Nuevo);
-                        int Tam = Tabla_Descompres[aux].Cadena.Length;
-                        Array.Resize(ref Result, (Result.Length + Tam));
-                        Array.Copy(Tabla_Descompres[aux].Cadena, 0, Result, Result.Length - Tam, Tam);
+
                     }
                     anterior = aux;
                 }
