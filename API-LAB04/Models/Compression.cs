@@ -181,7 +181,7 @@ namespace API_LAB04.Models
             Escritor.Write(Result);
             Escritor.Close();
             double[] data = Compresor_lzw.Datos_Compresion();
-            Compression.WriteRegistry(filename, Directory.GetCurrentDirectory() + "\\Compressed\\" + name + ".lzw", data[0], data[1], data[2]);
+            Compression.WriteRegistry(filename, FinalFileName, data[0], data[1], data[2]);
             File.Delete(filePath);
             return FinalFileName;
         }
