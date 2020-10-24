@@ -74,7 +74,7 @@ namespace API_LAB04.Models
             }
         }
 
-        public static string DecompressFile(string filePath)
+        public static string[] DecompressFile(string filePath)
         {
             
             LZW Compresor_lzw = new LZW();
@@ -119,7 +119,8 @@ namespace API_LAB04.Models
             Escritor.Write(Impresor);
             Escritor.Close();
             File.Delete(filePath);
-            return Name_Original;
+            string[] names = { Name_Original, FinalFileName };
+            return names;
         }
 
         public static void DirectoryCreation()
@@ -142,7 +143,7 @@ namespace API_LAB04.Models
         }
 
 
-        public static void CompressFile(string filePath, string filename, string name)
+        public static string CompressFile(string filePath, string filename, string name)
         {
             LZW Compresor_lzw = new LZW();
             FileStream fileC = new FileStream(filePath, FileMode.OpenOrCreate);
@@ -182,6 +183,7 @@ namespace API_LAB04.Models
             double[] data = Compresor_lzw.Datos_Compresion();
             Compression.WriteRegistry(filename, Directory.GetCurrentDirectory() + "\\Compressed\\" + name + ".lzw", data[0], data[1], data[2]);
             File.Delete(filePath);
+            return FinalFileName;
         }
     }
 }

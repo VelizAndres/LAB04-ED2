@@ -33,8 +33,8 @@ namespace API_LAB04.Controllers
                     }
                 }
                 else { return StatusCode(500); }
-                Compression.CompressFile(filePath, file.FileName, name);
-                FileStream Sender = new FileStream(Directory.GetCurrentDirectory() + "\\Compressed\\" + name + ".lzw", FileMode.OpenOrCreate);
+                string FinalFile = Compression.CompressFile(filePath, file.FileName, name);
+                FileStream Sender = new FileStream(FinalFile, FileMode.OpenOrCreate);
                 return File(Sender, "text/plain", name + ".lzw");
             }
             catch
@@ -64,9 +64,9 @@ namespace API_LAB04.Controllers
                         await file.CopyToAsync(stream);
                     }
                 }
-                string OriginalName = Compression.DecompressFile(filePath);
-                FileStream Sender = new FileStream(Directory.GetCurrentDirectory() + "\\Decompressed\\" + OriginalName, FileMode.OpenOrCreate);
-                return File(Sender, "text/plain", OriginalName);
+                var OriginalName = Compression.DecompressFile(filePath);
+                FileStream Sender = new FileStream(OriginalName[1], FileMode.OpenOrCreate);
+                return File(Sender, "text/plain", OriginalName[0]);
             }
             catch
             {
