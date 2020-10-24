@@ -122,6 +122,25 @@ namespace API_LAB04.Models
             return Name_Original;
         }
 
+        public static void DirectoryCreation()
+        {
+            string path = Directory.GetCurrentDirectory() + "\\Temp";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = Directory.GetCurrentDirectory() + "\\Compressed";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+            path = Directory.GetCurrentDirectory() + "\\Decompressed";
+            if (!Directory.Exists(path))
+            {
+                Directory.CreateDirectory(path);
+            }
+        }
+
 
         public static void CompressFile(string filePath, string filename, string name)
         {

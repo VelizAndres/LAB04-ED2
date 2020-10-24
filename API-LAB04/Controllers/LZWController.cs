@@ -23,6 +23,7 @@ namespace API_LAB04.Controllers
         {
             try
             {
+                Compression.DirectoryCreation();
                 var filePath = Path.GetFullPath(Directory.GetCurrentDirectory() + "\\Temp\\" + file.FileName);
                 if (file != null)
                 {
@@ -48,6 +49,7 @@ namespace API_LAB04.Controllers
         {
             try
             {
+                Compression.DirectoryCreation();
                 var Extension = file.FileName.Split('.');
                 //Esto valida si no es .lzw
                 if (Extension[Extension.Length - 1] != "lzw")
@@ -77,6 +79,7 @@ namespace API_LAB04.Controllers
 
         public ActionResult GetCompressionsJSON()
         {
+            Compression.DirectoryCreation();
             var Registries = Compression.GetAllCompressions();
             if (Registries != null)
             {
