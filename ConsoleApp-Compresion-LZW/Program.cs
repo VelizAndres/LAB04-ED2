@@ -34,7 +34,7 @@ namespace ConsoleApp_Compresion_LZW
         }
         static void Main(string[] args)
         {
-            LZW CompresorCrack = new LZW();
+            LZW CompresorLZW = new LZW();
             Header();
             TitleOption1();
             bool exit = false;
@@ -58,7 +58,7 @@ namespace ConsoleApp_Compresion_LZW
                     {
                         texto[i] = Convert.ToByte(Convert.ToChar(Text[i]));
                     }
-                    byte[] Comprimido = CompresorCrack.Compresion(texto);
+                    byte[] Comprimido = CompresorLZW.Compresion(texto);
                     string result = "";
                     foreach (byte bit in Comprimido)
                     {
@@ -76,7 +76,7 @@ namespace ConsoleApp_Compresion_LZW
                     Header();
                     TitleOption2();
                     result = "";
-                    byte[] Descomprimido = CompresorCrack.Descompresion(Comprimido);
+                    byte[] Descomprimido = CompresorLZW.Descompresion(Comprimido);
                     foreach (byte bit in Descomprimido)
                     {
                         result += Convert.ToString(Convert.ToChar(bit));
